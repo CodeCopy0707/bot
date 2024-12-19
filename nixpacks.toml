@@ -1,0 +1,5 @@
+[build]
+language = "python"
+
+[run]
+command = "python index.py"
