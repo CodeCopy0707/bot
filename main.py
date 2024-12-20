@@ -5,8 +5,8 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 import google.generativeai as genai
 
 # Telegram and Gemini API keys
-TELEGRAM_TOKEN = ""
-GEMINI_API_KEY = "
+TELEGRAM_TOKEN = "";
+GEMINI_API_KEY = "";
 # Initialize the Telegram Bot and Dispatcher
 bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher(bot)
