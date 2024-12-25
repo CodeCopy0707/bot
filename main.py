@@ -1,40 +1,35 @@
-
-
-from aiogram import Bot, Dispatcher, types, executor
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 import google.generativeai as genai
+import telebot
+import asyncio
 
-# Telegram and Gemini API keys
-TELEGRAM_TOKEN = "";
-GEMINI_API_KEY = "";
-# Initialize the Telegram Bot and Dispatcher
-bot = Bot(token=TELEGRAM_TOKEN)
-dp = Dispatcher(bot)
-
-# Configure Google Gemini AI
-genai.configure(api_key=GEMINI_API_KEY)
+# Google Gemini API Configuration
+genai.configure(api_key="AIzaSyCWFRHQ3B9A-wERY9QbggKWHffLeHkAuzg")
 model = genai.GenerativeModel("gemini-1.5-flash")
 
-# Function to generate a more explicit adult response in Hinglish
-def generate_adult_response(user_input):
-    try:
-        response = model.generate_content(f"Respond like a real erotic girlfriend, always first you msg, but too much loving, little talk, supportive, and loving and say everything in Hinglish. The user said: {user_input}")
-        return response.text.strip()
-    except Exception as e:
-        return f"Sorry baby, I can't fulfill that request right now. 😘"
+# Telegram Bot Token
+bot_token = '7910882641:AAEpXFHQsmArsbRV1_vuXp6u6ys6o42mhdo'
+bot = telebot.TeleBot(bot_token)
 
-# Start Command: Start conversation with the bot
-@dp.message_handler(commands=["start"])
-async def start(message: types.Message):
-    await message.reply("Hi there! 💕 I'm your girlfriend bby! 💖 How can I make your day better? 😊")
+# Function to generate ethical hacking scripts
+async def generate_script(query):
+    response = model.generate_content(query)
+    return response.text
 
-# Default Message Handler: Respond to user input with adult Hinglish response
-@dp.message_handler()
-async def handle_message(message: types.Message):
-    user_input = message.text
-    response = generate_adult_response(user_input)
-    await message.reply(response)
+# Function to handle user messages
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    bot.reply_to(message, "Hello! I'm your Ethical Hacking Assistant. Send me a query, and I'll generate a script for you!")
 
-# Run the bot
-if __name__ == "__main__":
-    executor.start_polling(dp, skip_updates=True)
+@bot.message_handler(func=lambda message: True)
+def handle_message(message):
+    user_query = message.text
+    bot.reply_to(message, "Generating script, please wait... ⏳")
+
+    # Generate script asynchronously
+    response = asyncio.run(generate_script(user_query))
+
+    # Send the generated script to the user
+    bot.reply_to(message, f"Here is your generated script:\n{response}")
+
+# Start the bot using polling
+bot.polling()
