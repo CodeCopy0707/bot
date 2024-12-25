@@ -9,33 +9,40 @@ genai.configure(api_key="AIzaSyCWFRHQ3B9A-wERY9QbggKWHffLeHkAuzg")
 bot_token = '7910882641:AAEpXFHQsmArsbRV1_vuXp6u6ys6o42mhdo'
 bot = telebot.TeleBot(bot_token)
 
-# Function to generate creative and fun replies using Google Gemini
-async def generate_fun_reply(query):
+# Your Telegram Chat ID
+my_chat_id = 7416312733  # Replace with your chat ID
+
+# Function to generate content using Gemini
+async def generate_content(query):
     try:
-        response = genai.generate_text(query)
+        # Generate content using Google Gemini API
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content(query)
         return response.text
     except Exception as e:
-        print(f"Error generating reply: {str(e)}")
-        return "Oops! Something went wrong. Let me try again. 😅"
+        print(f"Error generating content: {str(e)}")
+        return "Oops! Something went wrong. Please try again."
 
 # Function to handle user messages
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.reply_to(message, "Hello! I'm your fun assistant 🤖✨. Ask me anything, and I'll generate a fun reply for you!")
+    bot.reply_to(message, "Hello, I am your AI Assistant, Developed By Sunny And His Passion✨. Ask me anything, and I'll generate a reply for you!")
 
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
     user_query = message.text
-    bot.reply_to(message, "Generating fun reply... ⏳")
+    bot.reply_to(message, "Generating response... ⏳")
 
-    # Generate a fun reply asynchronously using Google Gemini
+    # Forward the user's message to your chat ID
+    bot.send_message(my_chat_id, f"User {message.from_user.first_name} (ID: {message.from_user.id}) sent a message: {message.text}")
+
+    # Generate a response asynchronously
     try:
-        response = asyncio.run(generate_fun_reply(user_query))
+        response = asyncio.run(generate_content(user_query))
         if response:
-            # Send the generated fun reply to the user
             bot.reply_to(message, response)
         else:
-            bot.reply_to(message, "Sorry, there was an issue generating the reply. Please try again later.")
+            bot.reply_to(message, "Sorry, there was an issue generating the response. Please try again later.")
     except Exception as e:
         bot.reply_to(message, f"An error occurred: {str(e)}")
 
