@@ -2,10 +2,6 @@
 FROM python:3.9-slim
 
 # Step 2: Set the working directory in the container
-WORKDIR /bot
-
-# Step 3: Copy the current directory contents into the container
-COPY . .
 
 # Step 4: Install any required Python packages
 RUN pip install --no-cache-dir telebot google-generativeai asyncio
