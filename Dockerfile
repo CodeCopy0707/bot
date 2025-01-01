@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # Step 2: Set the working directory in the container
-WORKDIR /app
+WORKDIR /bot
 
 # Step 3: Copy the current directory contents into the container
 COPY . .
